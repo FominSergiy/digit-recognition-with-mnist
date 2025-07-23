@@ -2,16 +2,14 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 import os
+from const import FILE_NAME
 
-MODEL_FILE = 'digit-recognition.keras'
-FOLDER = 'trained_model'
-FILE_PATH = f"{FOLDER}/{MODEL_FILE}"
 
-if not os.path.exists(FILE_PATH):
-    print(f"Model file '{MODEL_FILE}' not found. Please run train.py to train and save the model.")
+if not os.path.exists(FILE_NAME):
+    print(f"Model file '{FILE_NAME}' not found. Please run train.py to train and save the model.")
 else:
     # Load the trained model
-    model = tf.keras.models.load_model(FILE_PATH)
+    model = tf.keras.models.load_model(FILE_NAME)
 
     try:
         # Predict on own image

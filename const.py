@@ -1,0 +1,1 @@
+FILE_NAME = 'digit-recognition.keras'

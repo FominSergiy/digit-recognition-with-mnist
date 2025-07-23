@@ -3,6 +3,7 @@ import numpy as np
 from PIL import Image
 from mnist_dataset import MnistDataloader
 import time
+from const import FILE_NAME
 
 # Load data
 data_loader = MnistDataloader()
@@ -70,6 +71,5 @@ print(f"Total training time: {total_time_minutes:.2f} minutes")
 test_loss, test_accuracy = model.evaluate(x_test, y_test, verbose=0)
 print(f"\nAccuracy on test set: {test_accuracy:.4f}")
 
-file_name = 'digit-recognition.keras'
-model.save(f"trained_model/{file_name}")
-print(f'model saved to: {file_name}')
+model.save(FILE_NAME)
+print(f'model saved to: {FILE_NAME}')

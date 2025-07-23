@@ -71,5 +71,5 @@ test_loss, test_accuracy = model.evaluate(x_test, y_test, verbose=0)
 print(f"\nAccuracy on test set: {test_accuracy:.4f}")
 
 file_name = 'digit-recognition.keras'
-model.save(file_name)
+model.save(f"trained_model/{file_name}")
 print(f'model saved to: {file_name}')

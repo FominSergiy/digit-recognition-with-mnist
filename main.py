@@ -4,12 +4,14 @@ from PIL import Image
 import os
 
 MODEL_FILE = 'digit-recognition.keras'
+FOLDER = 'trained_model'
+FILE_PATH = f"{FOLDER}/{MODEL_FILE}"
 
-if not os.path.exists(MODEL_FILE):
+if not os.path.exists(FILE_PATH):
     print(f"Model file '{MODEL_FILE}' not found. Please run train.py to train and save the model.")
 else:
     # Load the trained model
-    model = tf.keras.models.load_model(MODEL_FILE)
+    model = tf.keras.models.load_model(FILE_PATH)
 
     try:
         # Predict on own image

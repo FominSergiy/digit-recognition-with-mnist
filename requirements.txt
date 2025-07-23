@@ -3,8 +3,11 @@ asgiref==3.8.1
 astunparse==1.6.3
 certifi==2025.4.26
 charset-normalizer==3.4.2
+contourpy==1.3.0
+cycler==0.12.1
 Django==4.2.23
 flatbuffers==25.2.10
+fonttools==4.59.0
 gast==0.6.0
 google-pasta==0.2.0
 grpcio==1.73.0
@@ -12,11 +15,14 @@ h5py==3.14.0
 idna==3.10
 image==1.5.33
 importlib_metadata==8.7.0
+importlib_resources==6.5.2
 keras==3.10.0
+kiwisolver==1.4.7
 libclang==18.1.1
 Markdown==3.8
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
+matplotlib==3.9.4
 mdurl==0.1.2
 ml_dtypes==0.5.1
 namex==0.1.0
@@ -27,6 +33,8 @@ packaging==25.0
 pillow==11.2.1
 protobuf==5.29.5
 Pygments==2.19.1
+pyparsing==3.2.3
+python-dateutil==2.9.0.post0
 requests==2.32.4
 rich==14.0.0
 six==1.17.0

@@ -1,6 +1,4 @@
 import tensorflow as tf
-import numpy as np
-from PIL import Image
 from mnist_dataset import MnistDataloader
 import time
 from const import FILE_NAME

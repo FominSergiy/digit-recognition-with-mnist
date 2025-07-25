@@ -1,35 +1,57 @@
-# Digit recognition with mnist and raspberry pi
-<img src="./cam.png" alt="mnist digit recognition with camera" width="50%" height="50%">
+# Digit Recognition with MNIST and Raspberry Pi
 
-🧠 A raspberry pi setup to use the neural network trained to recognize handwritten digits (0–9) from the MNIST dataset to classify digits from video stream.
+<img src="./cam.png" alt="MNIST digit recognition with camera" width="50%" height="50%">
 
-I skipped the model training part, and took this as a starting point: `https://github.com/elliebirbeck/tensorflow-digit-recognition` and used LLMs to make it work with current version of tensorflow.
+🧠 This project uses a Raspberry Pi setup to run a neural network trained to recognize handwritten digits (0–9) from the MNIST dataset, and classify digits from a live video stream.
 
-This repo is not a tutorial on how to train a model, but rather a practical guide on how to use on should someone decide to (or rather the setup I used to and steps I took to make it work).
+I skipped the model training phase and used this as a starting point: [`elliebirbeck/tensorflow-digit-recognition`](https://github.com/elliebirbeck/tensorflow-digit-recognition), modifying it with help from LLMs to work with the current version of TensorFlow.
+
+This repo is **not** a tutorial on how to train a model, but rather a practical guide on how to *use* one—specifically, the setup I used and the steps I took to make it work.
+
+---
 
 ## Requirements
 
-- Some computer that can run python3
-- Raspberry Pi with (Pi Camera Module)[https://www.raspberrypi.com/products/camera-module-v2/]
+- A computer that can run Python 3
+- Raspberry Pi with [Camera Module](https://www.raspberrypi.com/products/camera-module-v2/)
+
+---
 
 ## Installation
 
-- Install Python3 and pip
-- Install the Python dependencies `pip install -r requirements.txt`
-- Create local venv `python3 -m venv venv`
-- Unzip mnist dataset `unzip mnist_dataset/mnist-dataset.zip -d mnist_dataset `
-    - I included the dataset in case the original url I used is no longer valid.
-    - `source ./venv/bin/activate`
-    - run the `test_run.py` to confirm mnist data loader works as expected
-- Run the file `python main.py`
+1. Install Python 3 and `pip`
+2. Install Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Create a local virtual environment:
+   ```bash
+   python3 -m venv venv
+   source ./venv/bin/activate
+   ```
+4. Unzip the MNIST dataset:
+   ```bash
+   unzip mnist_dataset/mnist-dataset.zip -d mnist_dataset
+   ```
+   > The dataset is included in case the original URL becomes unavailable.
+5. Run `test_run.py` to confirm that the MNIST data loader works as expected.
+6. Start the app:
+   ```bash
+   python main.py
+   ```
+
+---
 
 ## Model Training
 
-`train.py` does the model training based on mnist_dataset training data. Once the model is trained it is safed into a dir that we are going to use to `scp` to our raspberry pi host.
+The `train.py` script handles model training using the data in `mnist_dataset/`. Once training completes, the model is saved into a directory that we’ll use to `scp` it to the Raspberry Pi.
 
-running `python3 train.py` trains the model
+To train the model:
+```bash
+python3 train.py
+```
 
-
+Expected output:
 ```
 Iteration 0     | Loss = 0.73475        | Accuracy = 0.78742
 Iteration 10    | Loss = 0.06162        | Accuracy = 0.98222
@@ -42,69 +64,118 @@ Time per epoch: 1.58 seconds
 Total training time: 1.31 minutes
 ```
 
-## Test run
+---
 
-once the model is trained the new file will be created - `digit-recognition.keras`, which is the trained model. we can do a test-run with the model and some random image to get a prediction by running `test_model.py`.
+## Test Run
 
-we are ready to move to raspberry pi.
+Once the model is trained, a new file named `digit-recognition.keras` will be created. This is your trained model.
 
-## Running on raspberry pi
+You can test it on a random image using:
+```bash
+python test_model.py
+```
 
-By this point we need to have raspberry pi setup with os, up and running. To see the digit recognition vizually it's better to run it attached to the monitor (otherwise the preview wont be available).
+Once verified, you're ready to move the model to your Raspberry Pi.
 
+---
 
-### Move trained model your machine -> raspberry pi
+## Running on Raspberry Pi
 
-I suggest you use either usb stick or `scp` to move your pre-trained `digit-recognition.keras` model to raspberry pi, rather than training on it (it would take you more time).
+Make sure your Raspberry Pi is up and running with the OS installed. To visualize the digit recognition, it's best to connect it to a monitor (the preview won't be visible over SSH).
 
-### Note on python modules
+### Move the Trained Model to the Pi
 
- - I git pulled this repo to my raspberry pi and setup venv locally with `python3 -m venv venv ----system-site-packages`. 
- - `pip install -r requirements.txt` to get all python modules
- - to get `picamera2` we need to install it through `apt get` and not pip, for that we needed the global packages flag
- - `sudo apt install -y python3-picamera2` to get the module. more on that [here](https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf)
- - in venv, we need to use global version of `numpy` - `pip uninstall numpy` to use the global version.
+Use either a USB stick or `scp` to copy the trained `digit-recognition.keras` model to the Pi. **Avoid training the model directly on the Pi**, as it would take much longer.
 
- That should be all, though if any errors be prepared to debug
+### Python Module Setup
 
- ## Model Run
+- Clone this repo onto your Raspberry Pi
+- Set up the virtual environment:
+  ```bash
+  python3 -m venv venv --system-site-packages
+  source venv/bin/activate
+  ```
+- Install dependencies:
+  ```bash
+  pip install -r requirements.txt
+  ```
 
- on raspberry pi run `python3 start_camera.py` - which will open the preview screen and start the model. You can now play with it :)
+#### Special Notes
 
- there is an option to save the processed frames, which were fed to the model - good option for debugging.
- uncomment the following line `# save_processed_img(img, digit)`
+- Install `picamera2` using `apt`, **not pip**:
+  ```bash
+  sudo apt install -y python3-picamera2
+  ```
+  [More info in the official manual](https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf)
 
+- You may need to **use the global version of NumPy**:
+  ```bash
+  pip uninstall numpy
+  ```
 
-## Post Notes
+That should be it — but be ready to debug if needed!
 
-I hand-drawn all my digits on a white piece of paper with black sharpie. This paper was then placed in front of the camera, which took the frames and passed them to the model. If there was a match and model classified an image as having a image, the result would be outputted to the terminal and (optionally) frame saved.
+---
 
-randomly found out the mnist data-set is biased for digit 1s tilted 30-45 degress to the right - otherwise digits arent recognized.
+## Running the Model
 
-I went through a few phazes of pre-processing and results were improved as the pre-processing improved.
+To start the model on the Raspberry Pi:
+```bash
+python3 start_camera.py
+```
 
-### Initial test runs
+This will open a preview window and begin digit classification.
 
-- <img src="./sample_frames/9_mnist_poor_frame_process.png"> : classified as 9
-- <img src="./sample_frames/9_second_mnist_poor_frame_process.png">: classified as 9
+> Tip: To save the processed frames that are passed to the model (for debugging), uncomment the line:
+> ```python
+> # save_processed_img(img, digit)
+> ```
 
-### Update frame processing using CV python module
+---
 
-Most of the updates were suggested by LLM and had to deal with finding the contours of the digit, cropping the digit itself, shrinking it to 20x20 and padding with extra pixels on the edges to make the digit centered + increasing the contour width to have better changes of recognizing "1"s.
+## Notes
 
-- <img src="./sample_frames/1_mnist_otso_updated.png">: classified as 1
-- <img src="./sample_frames/1_mnist_otso_updated_second.png"> classified as 1
-- <img src="./sample_frames/6_mnist_otso_updated.png">: classified as 6
-- <img src="./sample_frames/7_mnist_otso_update.png">: classified as 7
-- <img src="./sample_frames/9_mnist_otso_update.png">: classified as 9
+I hand-drew all digits on white paper using a black Sharpie. The paper was held in front of the camera, which captured frames and passed them to the model.
 
-### Run Screenshots
+If the model detected a digit, the prediction was printed to the terminal, and the corresponding frame was optionally saved.
 
-<img src="./demos/demo_bad_1.png">
+### Dataset Bias
 
-Found out this specific training has hard time recognizing 1s unless they are tilted
+Random observation: the MNIST dataset seems biased toward **digit 1s tilted 30–45° to the right**. If the 1s aren’t tilted, they are often not recognized correctly.
 
-<img src="./demos/demo_proper_1.png">
+### Preprocessing Experiments
 
-<img src="./demos/demo_5.png">
+I went through several phases of preprocessing — the results improved as preprocessing got better.
+
+#### Initial Test Runs
+
+- <img src="./sample_frames/9_mnist_poor_frame_process.png"> — classified as 9  
+- <img src="./sample_frames/9_second_mnist_poor_frame_process.png"> — classified as 9
+
+#### Improved Frame Processing with OpenCV
+
+Most improvements were suggested by LLMs and focused on:
+- Detecting contours
+- Cropping the digit
+- Resizing to 20×20
+- Padding to center the digit
+- Increasing contour thickness (to help with digit “1” recognition)
+
+Results:
+
+- <img src="./sample_frames/1_mnist_otso_updated.png"> — classified as 1  
+- <img src="./sample_frames/1_mnist_otso_updated_second.png"> — classified as 1  
+- <img src="./sample_frames/6_mnist_otso_updated.png"> — classified as 6  
+- <img src="./sample_frames/7_mnist_otso_update.png"> — classified as 7  
+- <img src="./sample_frames/9_mnist_otso_update.png"> — classified as 9
+
+---
+
+## Screenshots
+
+<img src="./demos/demo_bad_1.png">  
+This particular model struggled to recognize straight "1"s unless they were tilted.
+
+<img src="./demos/demo_proper_1.png">  
+<img src="./demos/demo_5.png">  
 <img src="./demos/demo_3.png">

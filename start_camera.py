@@ -53,9 +53,14 @@ def preprocess_frame(frame):
     return normalized, pil_img
 
 def save_processed_img(img, predicted_num):
-    dir = "images"
+    dir = "captured_images"
+
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+        print(f"Created directory at path: {os.path(dir)}")
+
     rand_name = f"{predicted_num}_{uuid.uuid4().hex}_.png"
-    # img.save(os.path.join(dir, rand_name))
+    img.save(os.path.join(dir, rand_name))
     return
 
 def process_request(request):
@@ -66,7 +71,7 @@ def process_request(request):
         confidence = np.max(prediction)
         if confidence > 0.95:
             print(f"Predicted digit: {digit} (confidence: {confidence:.2f})")
-            save_processed_img(img, digit)
+            # save_processed_img(img, digit)
         else:
             print("No digit detected")
 

@@ -1,7 +1,11 @@
 # Digit recognition with mnist and raspberry pi
-<img src="./sample_frames/cam.png" alt="mnist digit recognition with camera" width="50%" height="50%">
+<img src="./cam.png" alt="mnist digit recognition with camera" width="50%" height="50%">
 
-Initial code taken from repo: `https://github.com/elliebirbeck/tensorflow-digit-recognition` - it is outdated a bit, but serves as a good starting point.
+🧠 A raspberry pi setup to use the neural network trained to recognize handwritten digits (0–9) from the MNIST dataset to classify digits from video stream.
+
+I skipped the model training part, and took this as a starting point: `https://github.com/elliebirbeck/tensorflow-digit-recognition` and used LLMs to make it work with current version of tensorflow.
+
+This repo is not a tutorial on how to train a model, but rather a practical guide on how to use on should someone decide to (or rather the setup I used to and steps I took to make it work).
 
 ## Requirements
 
@@ -96,11 +100,11 @@ Most of the updates were suggested by LLM and had to deal with finding the conto
 
 ### Run Screenshots
 
-<img src="./sample_frames/demo_bad_1.png">
+<img src="./demos/demo_bad_1.png">
 
 Found out this specific training has hard time recognizing 1s unless they are tilted
 
-<img src="./sample_frames/demo_proper_1.png">
+<img src="./demos/demo_proper_1.png">
 
-<img src="./sample_frames/demo_5.png">
-<img src="./sample_frames/demo_3.png">
+<img src="./demos/demo_5.png">
+<img src="./demos/demo_3.png">
